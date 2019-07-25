@@ -13,6 +13,9 @@ import { FormControl } from '@angular/forms';
     .ui-messages-error {
       margin: 0;
       margin-top: 4px;
+      background-color: #FFF;
+      color: red;
+      border: none;
     }
   `]
 })
