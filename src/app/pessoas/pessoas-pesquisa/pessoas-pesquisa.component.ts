@@ -1,21 +1,65 @@
-import { Component, OnInit } from '@angular/core';
+import { ConfirmationService } from 'primeng/components/common/confirmationservice';
+import { ToastyService } from 'ng2-toasty';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { PessoaService, PessoaFiltro } from '../pessoa.service';
+import { LazyLoadEvent } from 'primeng/components/common/lazyloadevent';
+import { ErrorHandlerService } from 'app/core/error-handler.service';
 
 @Component({
   selector: 'app-pessoas-pesquisa',
   templateUrl: './pessoas-pesquisa.component.html',
   styleUrls: ['./pessoas-pesquisa.component.css']
 })
-export class PessoasPesquisaComponent {
+export class PessoasPesquisaComponent implements OnInit {
 
-  pessoas = [
-    {nome: 'Carlos Eduardo Guerra Resende', cidade: 'Niterói', estado: 'RJ', ativo: 'true'},
-    {nome: 'Jean Dutra Guerra Resende', cidade: 'Rio de Janeiro', estado: 'RJ', ativo: true},
-    {nome: 'Daniele Bragança Siqueira Machado', cidade: 'Niterói', estado: 'RJ', ativo: true},
-    {nome: 'Julia Maria Guerra Resende', cidade: 'Niterói', estado: 'RJ', ativo: true},
-    {nome: 'Alessandra Guerra Resende', cidade: 'Niterói', estado: 'RJ', ativo: false},
-    {nome: 'Arli Lima Machado', cidade: 'Rio de Janeiro', estado: 'RJ', ativo: true},
-    {nome: 'Alan Araújo Lima', cidade: 'São Paulo', estado: 'SP', ativo: false},
-    {nome: 'Mario Albino Pereira', cidade: 'Rio de Janeiro', estado: 'RJ', ativo: true}
-  ]
+  totalRegistros = 0;
+  filtro = new PessoaFiltro();
+  pessoas = [];
+  @ViewChild('tabela') grid;
+
+  constructor(private pessoaService: PessoaService,
+              private toasty: ToastyService,
+              private errorHandler: ErrorHandlerService,
+              private confirmation: ConfirmationService) { }
+
+  ngOnInit() {
+  }
+
+  pesquisar(pagina = 0) {
+    this.filtro.pagina = pagina;
+    this.pessoaService.pesquisar(this.filtro)
+      .then(resultado => {
+        this.totalRegistros = resultado.total;
+        this.pessoas = resultado.pessoas;
+      });
+  }
+
+  aoMudarPagina(event: LazyLoadEvent) {
+    const pagina = event.first / event.rows;
+    this.pesquisar(pagina);
+  }
+
+  confirmaExclusao(pessoa: any) {
+    this.confirmation.confirm({
+      message: 'Tem certeza que deseja excluir?',
+      accept: () => {
+        this.excluir(pessoa);
+      }
+    })
+  }
+
+  excluir(pessoa: any) {
+    console.log(pessoa)
+    this.pessoaService.excluir(pessoa.codigo)
+       .then(() => {
+          if (this.grid.first === 0) {
+            this.pesquisar();
+          } else {
+            this.grid.first = 0;
+          }
+          this.toasty.success('Pessoa excluída com sucesso!')
+       })
+       .catch(erro => this.errorHandler.handle(erro));
+  }
 
 }

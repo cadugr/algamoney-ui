@@ -1,27 +1,65 @@
-import { Component, OnInit } from '@angular/core';
+import { ConfirmationService } from 'primeng/components/common/confirmationservice';
+import { ToastyService } from 'ng2-toasty';
+import { LancamentoService, LancamentoFiltro } from './../lancamento.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { LazyLoadEvent } from 'primeng/components/common/lazyloadevent';
+import { ErrorHandlerService } from 'app/core/error-handler.service';
 
 @Component({
   selector: 'app-lancamentos-pesquisa',
   templateUrl: './lancamentos-pesquisa.component.html',
   styleUrls: ['./lancamentos-pesquisa.component.css']
 })
-export class LancamentosPesquisaComponent  {
+export class LancamentosPesquisaComponent implements OnInit {
 
-  lancamentos = [
-    { tipo: 'DESPESA', descricao: 'Compra de pão', dataVencimento: new Date(2017, 6, 30),
-      dataPagamento: null, valor: 4.55, pessoa: 'Padaria do José' },
-    { tipo: 'RECEITA', descricao: 'Venda de software', dataVencimento: new Date(2017, 6, 10),
-      dataPagamento: new Date(2017, 6, 9), valor: 80000, pessoa: 'Atacado Brasil' },
-    { tipo: 'DESPESA', descricao: 'Impostos', dataVencimento: new Date(2017, 7, 20),
-      dataPagamento: null, valor: 14312, pessoa: 'Ministério da Fazenda' },
-    { tipo: 'DESPESA', descricao: 'Mensalidade de escola', dataVencimento: new Date(2017, 6, 5),
-      dataPagamento: new Date(2017, 5, 30), valor: 800, pessoa: 'Escola Abelha Rainha' },
-    { tipo: 'RECEITA', descricao: 'Venda de carro', dataVencimento: new Date(2017, 8, 18),
-      dataPagamento: null, valor: 55000, pessoa: 'Sebastião Souza' },
-    { tipo: 'DESPESA', descricao: 'Aluguel', dataVencimento: new Date(2017, 7, 10),
-      dataPagamento: new Date(2017, 7, 9), valor: 1750, pessoa: 'Casa Nova Imóveis' },
-    { tipo: 'DESPESA', descricao: 'Mensalidade musculação', dataVencimento: new Date(2017, 7, 13),
-      dataPagamento: null, valor: 180, pessoa: 'Academia Top' }
-  ];
+  totalRegistros = 0;
+  filtro = new LancamentoFiltro();
+  lancamentos = [];
+  @ViewChild('tabela') grid;
+
+  constructor(private lancamentoService: LancamentoService,
+              private errorHandler: ErrorHandlerService,
+              private toasty: ToastyService,
+              private confirmation: ConfirmationService) { }
+
+  ngOnInit() {
+  }
+
+  pesquisar(pagina = 0) {
+    this.filtro.pagina = pagina;
+    this.lancamentoService.pesquisar(this.filtro)
+      .then(resultado => {
+        this.totalRegistros = resultado.total;
+        this.lancamentos = resultado.lancamentos;
+      })
+      .catch(erro => this.errorHandler.handle(erro));
+  }
+
+  aoMudarPagina(event: LazyLoadEvent) {
+    const pagina = event.first / event.rows;
+    this.pesquisar(pagina);
+  }
+
+  confirmaExclusao(lancamento: any) {
+    this.confirmation.confirm({
+      message: 'Tem certeza que deseja excluir?',
+      accept: () => {
+        this.excluir(lancamento);
+      }
+    })
+  }
+
+  excluir(lancamento: any) {
+    this.lancamentoService.excluir(lancamento.codigo)
+       .then(() => {
+          if (this.grid.first === 0) {
+            this.pesquisar();
+          } else {
+            this.grid.first = 0;
+          }
+          this.toasty.success('Lançamento excluído com sucesso!')
+       })
+       .catch(erro => this.errorHandler.handle(erro));
+  }
 
 }

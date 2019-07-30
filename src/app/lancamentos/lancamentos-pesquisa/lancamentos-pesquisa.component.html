@@ -1,29 +1,61 @@
 <div class="container">
   <div class="ui-g">
-    <div class="ui-g-12">
-      <h1>Lançamentos</h1>
-    </div>
-    <div class="ui-g-12 ui-fluid">
-      <!--essa classe ui-fluid faz com que os filhos desse componente passem a ocupar 100% a tela-->
-      <label>Descrição</label>
-      <input pInputText type="text">
-    </div>
-    <div class="ui-g-12">
-      <label style="display: block;">Vencimento</label>
-      <!--esse estilo inline faz com que seja forçada uma quebra de linha nesse componente-->
-      <input pInputText type="text">
+    <form autocomplete="off" (ngSubmit) = "pesquisar()">
+      <div class="ui-g-12">
+        <h1>Lançamentos</h1>
+      </div>
+      <div class="ui-g-12 ui-fluid">
+        <!--essa classe ui-fluid faz com que os filhos desse componente passem a ocupar 100% a tela-->
+        <label>Descrição</label>
+        <input pInputText type="text" name = "descricao" [(ngModel)] = "filtro.descricao">
+      </div>
+      <div class="ui-g-12">
+        <label style="display: block;">Vencimento</label>
+        <!--esse estilo inline faz com que seja forçada uma quebra de linha nesse componente-->
+        <p-calendar dateFormat="dd/mm/yy" [inputStyle] = "{width: '95px'}" name="vencimentoInicio" [(ngModel)] = "filtro.dataVencimentoInicio"></p-calendar>
 
-      <label>Até</label>
-      <input pInputText type="text">
-    </div>
-    <div class="ui-g-12">
-      <button pButton type="submit" label="Pesquisar"></button>
-    </div>
+        <label>Até</label>
+        <p-calendar dateFormat="dd/mm/yy" [inputStyle] = "{width: '95px'}" name="vencimentoFim" [(ngModel)] = "filtro.dataVencimentoFim"></p-calendar>
+      </div>
+      <div class="ui-g-12">
+        <button pButton type="submit" label="Pesquisar"></button>
+      </div>
+    </form>
   </div>
   <div class="ui-g">
     <div class="ui-g-12">
       <!--O próprio dataTable já funciona como um loop na nossa lista-->
-      <app-lancamentos-grid [lancamentos]="lancamentos"></app-lancamentos-grid>
+      <p-dataTable [value]="lancamentos" [responsive]="true"
+           emptyMessage="Nenhum registro encontrado"
+           [paginator]="true" [rows]="filtro.itensPorPagina"
+           [lazy]="true" [totalRecords] = "totalRegistros"
+           (onLazyLoad) = "aoMudarPagina($event)"
+           #tabela>
+          <p-column field="pessoa" header="Pessoa"></p-column>
+          <p-column field="descricao" header="Descrição"></p-column>
+          <p-column field="dataVencimento" header="Vencimento" styleClass="col-data">
+            <ng-template let-lanc="rowData" pTemplate="body">
+              {{lanc.dataVencimento | date: 'dd/MM/y'}}
+            </ng-template>
+          </p-column>
+          <p-column field="dataPagamento" header="Pagamento" styleClass="col-data">
+            <ng-template let-lanc="rowData" pTemplate="body">
+              {{lanc.dataPagamento | date: 'dd/MM/y'}}
+            </ng-template>
+          </p-column>
+          <p-column field="valor" header="Valor" styleClass="col-valor">
+            <ng-template let-lanc="rowData" pTemplate="body">
+              <span [ngStyle]="{ color: lanc.tipo === 'DESPESA' ? 'red' : 'blue' }">{{lanc.valor | number: '1.2-2'}}</span>
+            </ng-template>
+          </p-column>
+          <p-column styleClass="col-acoes">
+            <ng-template let-lanc="rowData" pTemplate="body">
+              <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"></a>
+              <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"
+              (click) = "confirmaExclusao(lanc)"></button>
+            </ng-template>
+          </p-column>
+        </p-dataTable>
     </div>
     <div class="ui-g-12">
       <a pButton label="Novo Lançamento"></a>

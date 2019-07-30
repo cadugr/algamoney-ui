@@ -10,7 +10,6 @@ import { DataTableModule } from 'primeng/components/datatable/datatable';
 import { TooltipModule } from 'primeng/components/tooltip/tooltip';
 
 import { PessoasPesquisaComponent } from './pessoas-pesquisa/pessoas-pesquisa.component';
-import { PessoasGridComponent } from './pessoas-grid/pessoas-grid.component';
 import { PessoaCadastroComponent } from './pessoa-cadastro/pessoa-cadastro.component';
 
 
@@ -27,8 +26,7 @@ import { PessoaCadastroComponent } from './pessoa-cadastro/pessoa-cadastro.compo
   ],
   declarations: [
     PessoaCadastroComponent,
-    PessoasPesquisaComponent,
-    PessoasGridComponent
+    PessoasPesquisaComponent
   ],
   exports: [
     PessoaCadastroComponent,
