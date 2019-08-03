@@ -49,7 +49,6 @@ export class PessoasPesquisaComponent implements OnInit {
   }
 
   excluir(pessoa: any) {
-    console.log(pessoa)
     this.pessoaService.excluir(pessoa.codigo)
        .then(() => {
           if (this.grid.first === 0) {
@@ -60,6 +59,18 @@ export class PessoasPesquisaComponent implements OnInit {
           this.toasty.success('Pessoa excluída com sucesso!')
        })
        .catch(erro => this.errorHandler.handle(erro));
+  }
+
+  mudarStatus(pessoa: any) {
+    const novoStatus = !pessoa.ativo;
+
+    this.pessoaService.mudarStatus(pessoa)
+      .then(() => {
+        const acao = novoStatus ? 'ativada' : 'desativada';
+        pessoa.ativo = novoStatus;
+        this.toasty.success(`Pessoa ${acao} com sucesso!`);
+      })
+      .catch(erro => this.errorHandler.handle(erro));
   }
 
 }

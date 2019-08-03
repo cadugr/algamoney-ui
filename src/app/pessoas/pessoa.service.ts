@@ -2,6 +2,7 @@ import { Http, Headers, URLSearchParams } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
+import { Pessoa } from 'app/core/model';
 
 export class PessoaFiltro {
   nome: string
@@ -56,6 +57,25 @@ export class PessoaService {
     return this.http.delete(`${this.pessoasUrl}/${codigo}`, {headers})
        .toPromise()
        .then(() => null)
+  }
+
+  mudarStatus(pessoa: any): Promise<void> {
+    const headers = new Headers();
+    headers.append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
+    headers.append('Content-Type', 'application/json');
+    return this.http.put(`${this.pessoasUrl}/${pessoa.codigo}/ativo`, !pessoa.ativo, {headers})
+        .toPromise()
+        .then(() => null)
+  }
+
+  adicionar(pessoa: Pessoa): Promise<Pessoa> {
+    const headers = new Headers();
+    headers.append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.post(this.pessoasUrl, JSON.stringify(pessoa), {headers})
+        .toPromise()
+        .then(response => response.json())
   }
 
 }

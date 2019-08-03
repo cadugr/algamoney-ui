@@ -9,6 +9,7 @@ import { ErrorHandlerService } from './error-handler.service';
 import { LancamentoService } from 'app/lancamentos/lancamento.service';
 import { PessoaService } from 'app/pessoas/pessoa.service';
 import { ConfirmationService } from 'primeng/components/common/confirmationservice';
+import { CategoriaService } from 'app/categorias/categoria.service';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { ConfirmationService } from 'primeng/components/common/confirmationservi
     ErrorHandlerService,
     LancamentoService,
     PessoaService,
+    CategoriaService,
     ConfirmationService,
     {provide: LOCALE_ID, useValue: 'pt-BR'}
   ]
