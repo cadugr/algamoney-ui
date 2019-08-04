@@ -13,6 +13,7 @@ import { CalendarModule } from 'primeng/components/calendar/calendar';
 import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 import { CurrencyMaskModule } from 'ng2-currency-mask/src/currency-mask.module';
 import { SelectButtonModule } from 'primeng/components/selectbutton/selectbutton';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -27,16 +28,14 @@ import { SelectButtonModule } from 'primeng/components/selectbutton/selectbutton
     SelectButtonModule,
     DropdownModule,
     CurrencyMaskModule,
-    SharedModule
+    SharedModule,
+    RouterModule
   ],
   declarations: [
     LancamentoCadastroComponent,
     LancamentosPesquisaComponent
   ],
-  exports: [
-    LancamentoCadastroComponent,
-    LancamentosPesquisaComponent
-  ],
+  exports: [],
 
 })
 export class LancamentosModule { }

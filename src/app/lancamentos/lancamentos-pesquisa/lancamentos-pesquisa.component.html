@@ -50,7 +50,8 @@
           </p-column>
           <p-column styleClass="col-acoes">
             <ng-template let-lanc="rowData" pTemplate="body">
-              <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"></a>
+              <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"
+                 [routerLink]="['/lancamentos', lanc.codigo]"></a>
               <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"
               (click) = "confirmaExclusao(lanc)"></button>
             </ng-template>
@@ -58,7 +59,7 @@
         </p-dataTable>
     </div>
     <div class="ui-g-12">
-      <a pButton label="Novo Lançamento"></a>
+      <a pButton label="Novo Lançamento" routerLink="/lancamentos/novo"></a>
     </div>
   </div>
 </div>
