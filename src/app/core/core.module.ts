@@ -15,6 +15,7 @@ import { ConfirmationService } from 'primeng/components/common/confirmationservi
 import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdialog';
 import { ToastyModule } from 'ng2-toasty';
 import { JwtHelper } from 'angular2-jwt';
+import { NaoAutorizadoComponent } from './nao-autorizado.component';
 
 
 @NgModule({
@@ -24,7 +25,7 @@ import { JwtHelper } from 'angular2-jwt';
     ToastyModule.forRoot(), // só utiliza este forRoot, se estiver importando no módulo principal
     ConfirmDialogModule
   ],
-  declarations: [NavbarComponent, PaginaNaoEncontradaComponent],
+  declarations: [NavbarComponent, PaginaNaoEncontradaComponent, NaoAutorizadoComponent],
   exports: [
     NavbarComponent,
     ToastyModule,

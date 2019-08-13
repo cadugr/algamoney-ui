@@ -38,6 +38,11 @@ export class AuthService {
       })
   }
 
+  isAccessTokenInvalido() {
+    const token = localStorage.getItem('token')
+    return !token || this.jwtHelper.isTokenExpired(token)
+  }
+
   login (usuario: string, senha: string): Promise<void> {
     const headers = new Headers();
     headers.append('Content-Type', 'application/x-www-form-urlencoded')
@@ -59,6 +64,15 @@ export class AuthService {
          }
          return Promise.reject(response);
        })
+  }
+
+  temQualquerPermissao(roles) {
+    for (const role of roles) {
+      if (this.temPermissao(role)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private armazenarToken(token: string) {
