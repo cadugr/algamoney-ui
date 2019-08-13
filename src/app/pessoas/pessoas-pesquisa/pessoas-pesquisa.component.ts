@@ -1,9 +1,13 @@
-import { ConfirmationService } from 'primeng/components/common/confirmationservice';
-import { ToastyService } from 'ng2-toasty';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PessoaService, PessoaFiltro } from '../pessoa.service';
+import { Title } from '@angular/platform-browser';
+
+import { ConfirmationService } from 'primeng/components/common/confirmationservice';
 import { LazyLoadEvent } from 'primeng/components/common/lazyloadevent';
+import { ToastyService } from 'ng2-toasty';
+
+import { PessoaService, PessoaFiltro } from '../pessoa.service';
 import { ErrorHandlerService } from 'app/core/error-handler.service';
+import { Pessoa } from 'app/core/model';
 
 @Component({
   selector: 'app-pessoas-pesquisa',
@@ -15,14 +19,18 @@ export class PessoasPesquisaComponent implements OnInit {
   totalRegistros = 0;
   filtro = new PessoaFiltro();
   pessoas = [];
+  pessoa = new Pessoa();
   @ViewChild('tabela') grid;
 
   constructor(private pessoaService: PessoaService,
               private toasty: ToastyService,
               private errorHandler: ErrorHandlerService,
-              private confirmation: ConfirmationService) { }
+              private confirmation: ConfirmationService,
+              private title: Title) { }
 
   ngOnInit() {
+    this.title.setTitle('Pesquisa de pessoas')
+    this.carregarPessoa(1)
   }
 
   pesquisar(pagina = 0) {
@@ -46,6 +54,14 @@ export class PessoasPesquisaComponent implements OnInit {
         this.excluir(pessoa);
       }
     })
+  }
+
+  carregarPessoa(codigo: number) {
+    this.pessoaService.buscarPeloCodigo(codigo)
+      .then(pessoa => {
+        this.pessoa = pessoa
+      })
+      .catch(erro => this.errorHandler.handle(erro))
   }
 
   excluir(pessoa: any) {

@@ -1,12 +1,15 @@
-import { LancamentoService } from 'app/lancamentos/lancamento.service';
 import { FormControl } from '@angular/forms';
-import { Lancamento } from './../../core/model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { Component, OnInit } from '@angular/core';
+
+import { LancamentoService } from 'app/lancamentos/lancamento.service';
+import { Lancamento } from './../../core/model';
 import { CategoriaService } from 'app/categorias/categoria.service';
 import { ErrorHandlerService } from 'app/core/error-handler.service';
 import { PessoaService } from 'app/pessoas/pessoa.service';
+
 import { ToastyService } from 'ng2-toasty';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-lancamento-cadastro',
@@ -32,10 +35,12 @@ export class LancamentoCadastroComponent implements OnInit {
               private toasty: ToastyService,
               private errorHandler: ErrorHandlerService,
               private route: ActivatedRoute,
-              private router: Router) {}
+              private router: Router,
+              private title: Title) {}
 
   ngOnInit() {
     this.codigoLancamento = this.route.snapshot.params['codigo']
+    this.title.setTitle('Novo Lançamento')
     if (this.codigoLancamento) {
       this.validaEdicao()
       this.carregarLancamento(this.codigoLancamento)
@@ -58,6 +63,7 @@ export class LancamentoCadastroComponent implements OnInit {
     this.lancamentoService.buscarPorCodigo(codigo)
        .then(lancamento => {
          this.lancamento = lancamento
+         this.atualizarTituloEdicao()
        })
        .catch(erro => this.errorHandler.handle(erro))
   }
@@ -84,6 +90,7 @@ export class LancamentoCadastroComponent implements OnInit {
        .then(lancamento => {
          this.lancamento = lancamento
          this.toasty.success('Lançamento alterado com sucesso')
+         this.atualizarTituloEdicao()
        })
        .catch(erro => this.errorHandler.handle(erro))
   }
@@ -114,6 +121,10 @@ export class LancamentoCadastroComponent implements OnInit {
       this.lancamento = new Lancamento()
     }.bind(this), 1)
     this.router.navigate(['/lancamentos/novo'])
+  }
+
+  atualizarTituloEdicao() {
+    this.title.setTitle(`Edição do Lançamento: ${this.lancamento.descricao}`)
   }
 
 }

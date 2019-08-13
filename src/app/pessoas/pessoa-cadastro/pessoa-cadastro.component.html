@@ -1,7 +1,7 @@
 <div class="container">
   <div class="ui-g">
     <div class="ui-g-12">
-      <h1>Nova Pessoa</h1>
+      <h1>{{ titulo }}</h1>
     </div>
     <form #formPessoa="ngForm" autocomplete="off" (ngSubmit) = "salvar(formPessoa)">
       <div class="ui-g-12 ui-fluid">
@@ -46,8 +46,9 @@
       </div>
       <div class="ui-g-12">
         <button pButton label="Salvar" [disabled]="formPessoa.invalid"></button>
-        <button pButton class="ui-button-info" label="Novo"></button>
-        <a href="javascript:;">Voltar para a pesquisa</a>
+        <button pButton class="ui-button-info" label="Novo"
+         (click) = "nova(formPessoa)"></button>
+        <a routerLink="/pessoas">Voltar para a pesquisa</a>
       </div>
     </form>
   </div>

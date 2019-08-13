@@ -1,4 +1,3 @@
-import { SharedModule } from './../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -11,6 +10,8 @@ import { TooltipModule } from 'primeng/components/tooltip/tooltip';
 
 import { PessoasPesquisaComponent } from './pessoas-pesquisa/pessoas-pesquisa.component';
 import { PessoaCadastroComponent } from './pessoa-cadastro/pessoa-cadastro.component';
+import { PessoasRoutingModule } from './pessoas-routing.module';
+import { SharedModule } from './../shared/shared.module';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { PessoaCadastroComponent } from './pessoa-cadastro/pessoa-cadastro.compo
     InputMaskModule,
     DataTableModule,
     TooltipModule,
-    SharedModule
+    SharedModule,
+    PessoasRoutingModule
   ],
   declarations: [
     PessoaCadastroComponent,

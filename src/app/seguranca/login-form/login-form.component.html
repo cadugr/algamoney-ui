@@ -1,0 +1,24 @@
+<!-- <div> -->
+<div class="container" style="max-width: 400px; margin: auto">
+  <!-- {{auth.jwtPayload | json}} -->
+  <form autocomplete="off" #f="ngForm">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+          <h1>Login</h1>
+      </div>
+      <div class="ui-g-12">
+          <input pInputText type="text" name="email" #usuario  placeholder="E-mail"
+            required autofocus>
+      </div>
+      <div class="ui-g-12">
+          <input pInputText type="password" name="senha" #senha placeholder="Senha"
+            required>
+      </div>
+      <div class="ui-g-12">
+        <button pButton type="submit" label="Login" [disabled]="!f.valid"
+          (click)="login(usuario.value, senha.value); senha.value = '';"></button>
+      </div>
+    </div>
+  </form>
+</div>
+<!-- </div> -->
