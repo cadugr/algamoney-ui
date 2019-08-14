@@ -13,6 +13,7 @@ import { InputTextModule } from 'primeng/components/inputtext/inputtext';
 import { ButtonModule } from 'primeng/components/button/button';
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
 import { AuthGuard } from './auth.guard';
+import { LogoutService } from './logout.service';
 
 
 export function authHttpServiceFactory (auth: AuthService, http: Http, options: RequestOptions) {
@@ -41,7 +42,8 @@ export function authHttpServiceFactory (auth: AuthService, http: Http, options: 
       useFactory: authHttpServiceFactory,
       deps: [AuthService, Http, RequestOptions]
     },
-    AuthGuard
+    AuthGuard,
+    LogoutService
   ]
 })
 export class SegurancaModule { }
